@@ -68,34 +68,40 @@ export const setUserOffline = internalMutation({
     }
 });
 
-export const getUser = query({
+export const getUsers = query({
     args: {},
     handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
-            throw new ConvexError("Unauthorized User!!!");
+            throw new ConvexError("Unauthorized");
         }
+
         const users = await ctx.db.query("users").collect();
         return users;
-    }
+    },
 });
+
 export const getMe = query({
     args: {},
     handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
+        console.log(identity);
         if (!identity) {
-            throw new ConvexError("Unauthorized User!!!");
+            throw new ConvexError("Unauthorized");
         }
+
         const user = await ctx.db
             .query("users")
-            .withIndex("by_tokenIdentifier", q => q.eq("tokenIdentifier", identity.tokenIdentifier))
+            .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
             .unique();
 
         if (!user) {
-            throw new ConvexError("User Not Found!!!");
+            throw new ConvexError("User not found");
         }
+
         return user;
-    }
+    },
 });
+
 
 // TODO: Add getGroupMembers query - later
