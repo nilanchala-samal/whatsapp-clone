@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    images: {
+		remotePatterns: [
+			{ hostname: "enduring-dolphin-70.convex.cloud" },
+		],
+	},
+};
 
 export default nextConfig;
