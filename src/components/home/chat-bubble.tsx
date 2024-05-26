@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Stethoscope } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription } from "../ui/dialog";
 import ReactPlayer from "react-player";
+import ChatAvatarActions from "./chat-avatar-actions";
 
 type ChatBubbleProps = {
     message: IMessage;
@@ -29,17 +30,17 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
     const [open, setOpen] = useState(false);
 
     const renderMessageContent = () => {
-		switch (message.messageType) {
-			case "text":
-				return <TextMessage message={message} />;
-			case "image":
-				return <ImageMessage message={message} handleClick={() => setOpen(true)} />;
-			case "video":
-				return <VideoMessage message={message} />;
-			default:
-				return null;
-		}
-	};
+        switch (message.messageType) {
+            case "text":
+                return <TextMessage message={message} />;
+            case "image":
+                return <ImageMessage message={message} handleClick={() => setOpen(true)} />;
+            case "video":
+                return <VideoMessage message={message} />;
+            default:
+                return null;
+        }
+    };
 
     if (!fromMe) {
         return (
@@ -54,6 +55,10 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
                     />
                     <div className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
                         <OtherMessageIndicator />
+                        {isGroup && <ChatAvatarActions
+                            message={message}
+                            me={me}
+                        />}
                         {renderMessageContent()}
                         {open && <ImageDialog src={message.content} open={open} onClose={() => setOpen(false)} />}
                         <MessageTime time={time} fromMe={fromMe} />
